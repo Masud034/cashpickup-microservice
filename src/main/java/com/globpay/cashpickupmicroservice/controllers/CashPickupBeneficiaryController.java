@@ -2,6 +2,8 @@ package com.globpay.cashpickupmicroservice.controllers;
 
 import com.globpay.cashpickupmicroservice.entities.CashPickupBeneficiary;
 import com.globpay.cashpickupmicroservice.services.CashPickupBeneficiaryService;
+import com.globpay.cashpickupmicroservice.validators.BeneficiaryIdMustExist;
+import com.globpay.cashpickupmicroservice.validators.UserIdMustExist;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,32 +18,33 @@ public class CashPickupBeneficiaryController {
     @Autowired
     private CashPickupBeneficiaryService cashPickupBeneficiaryService;
 
-    @GetMapping(value = "{userId}/beneficiaries",produces = "application/json")
-    public ResponseEntity<CashPickupBeneficiary> getAllBeneficiaries(@PathVariable String userId){
+    @GetMapping(value = "/beneficiary/{userId}/cashpickup",produces = "application/json")
+    public ResponseEntity<CashPickupBeneficiary> getAllBeneficiaries(@PathVariable @UserIdMustExist String userId){
         return new ResponseEntity(cashPickupBeneficiaryService.getAllBeneficiaries(userId), HttpStatus.OK);
     }
 
-    @GetMapping(value = "beneficiaries/{beneficiaryId}", produces = "application/json")
-    public ResponseEntity<CashPickupBeneficiary> getBeneficiary(@PathVariable String beneficiaryId){
-        return new ResponseEntity<>(cashPickupBeneficiaryService.getBeneficiary(beneficiaryId), HttpStatus.OK);
+    @GetMapping(value = "beneficiary/{userId}/cashpickup/{cashpickupId}", produces = "application/json")
+    public ResponseEntity<CashPickupBeneficiary> getBeneficiary(@PathVariable @UserIdMustExist String userId,
+                                                                @PathVariable @BeneficiaryIdMustExist String cashpickupId){
+        return new ResponseEntity<>(cashPickupBeneficiaryService.getBeneficiary(cashpickupId), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/beneficiary", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<CashPickupBeneficiary> addBeneficiary(@RequestBody @Valid CashPickupBeneficiary cashPickupBeneficiary){
-        return new ResponseEntity<>(cashPickupBeneficiaryService.addBeneficiary(cashPickupBeneficiary), HttpStatus.CREATED);
+    @PostMapping(value = "/beneficiary/{userId}/cashpickup", consumes = "application/json", produces = "application/json")
+    public  ResponseEntity<CashPickupBeneficiary> addBeneficiary(@PathVariable String userId, @Valid @RequestBody CashPickupBeneficiary cashPickupBeneficiary){
+        return new ResponseEntity<>(cashPickupBeneficiaryService.addBeneficiary(userId, cashPickupBeneficiary), HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "beneficiaries/{userId}/beneficiary/{beneficiaryId}", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<CashPickupBeneficiary> updateBeneficiary(@PathVariable String beneficiaryId,
+    @PutMapping(value = "beneficiary/{userId}/beneficiary/{cashpickupId}", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<CashPickupBeneficiary> updateBeneficiary(@PathVariable String cashpickupId,
                                                                    @PathVariable String userId,
-                                                                   @RequestBody @Valid CashPickupBeneficiary newCashPickupBeneficiary){
+                                                                   @Valid @RequestBody CashPickupBeneficiary newCashPickupBeneficiary){
         return new ResponseEntity<>(cashPickupBeneficiaryService.updateBeneficiary
-                (beneficiaryId, newCashPickupBeneficiary), HttpStatus.OK);
+                (cashpickupId, newCashPickupBeneficiary), HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "beneficiaries/{userId}/beneficiary/{beneficiaryId}")
-    public ResponseEntity deleteBeneficiary(@PathVariable String userId, @PathVariable String beneficiaryId){
-        cashPickupBeneficiaryService.deleteBeneficiary(beneficiaryId);
+    @DeleteMapping(value = "beneficiary/{userId}/cashpickup/{cashpickupId}")
+    public ResponseEntity deleteBeneficiary(@PathVariable String userId, @PathVariable String cashpickupId){
+        cashPickupBeneficiaryService.deleteBeneficiary(cashpickupId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }

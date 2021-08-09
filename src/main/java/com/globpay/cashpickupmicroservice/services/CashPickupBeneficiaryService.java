@@ -24,7 +24,9 @@ public class CashPickupBeneficiaryService {
         return cashPickupBeneficiaryRepository.findById(beneficiaryId).get();
     }
 
-    public CashPickupBeneficiary addBeneficiary(CashPickupBeneficiary newCashPickupBeneficiary) {
+    public CashPickupBeneficiary addBeneficiary(String userId, CashPickupBeneficiary newCashPickupBeneficiary) {
+
+        newCashPickupBeneficiary.setUserId(userId);
         if (cashPickupBeneficiaryRepository.existsByUserIdAndNameAndMobileNumberAndVerificationIdAndStatus
                 (
                         newCashPickupBeneficiary.getUserId(),newCashPickupBeneficiary.getName(),

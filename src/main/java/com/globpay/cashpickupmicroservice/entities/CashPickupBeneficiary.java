@@ -17,7 +17,6 @@ public class CashPickupBeneficiary {
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     private String id;
 
-    @NotEmpty
     private String userId;
 
     @NotEmpty
