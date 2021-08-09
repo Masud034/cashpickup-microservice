@@ -10,9 +10,7 @@ import java.util.List;
 public interface CashPickupBeneficiaryRepository extends JpaRepository<CashPickupBeneficiary, String> {
 
     List<CashPickupBeneficiary> findByUserId(String userId);
-
-    boolean existsByUserIdAndNameAndMobileNumberAndVerificationIdAndStatus(String userId,String name, String mobileNumber,
-                                                                           String verificationId,
-                                                                           boolean status);
+    boolean existsByUserIdAndNameAndMobileNumberAndVerificationIdAndStatus(String userId, String name, String mobileNumber, String verificationId, boolean status);
     boolean existsByUserId(String userId);
+
 }

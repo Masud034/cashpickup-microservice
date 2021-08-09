@@ -29,8 +29,10 @@ public class CashPickupBeneficiaryService {
         newCashPickupBeneficiary.setUserId(userId);
         if (cashPickupBeneficiaryRepository.existsByUserIdAndNameAndMobileNumberAndVerificationIdAndStatus
                 (
-                        newCashPickupBeneficiary.getUserId(),newCashPickupBeneficiary.getName(),
-                        newCashPickupBeneficiary.getMobileNumber(),newCashPickupBeneficiary.getVerificationId(),
+                        newCashPickupBeneficiary.getUserId(),
+                        newCashPickupBeneficiary.getName(),
+                        newCashPickupBeneficiary.getMobileNumber(),
+                        newCashPickupBeneficiary.getVerificationId(),
                         newCashPickupBeneficiary.isStatus())
                 )
         {

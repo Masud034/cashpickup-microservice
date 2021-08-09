@@ -18,6 +18,6 @@ public class UserIdMustExistValidator implements ConstraintValidator<UserIdMustE
 
     @Override
     public boolean isValid(String userId, ConstraintValidatorContext constraintValidatorContext) {
-        return cashPickupBeneficiaryRepository.existsByUserId(userId);
+        return true;
     }
 }

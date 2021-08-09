@@ -30,7 +30,7 @@ public class CashPickupBeneficiaryController {
     }
 
     @PostMapping(value = "/beneficiary/{userId}/cashpickup", consumes = "application/json", produces = "application/json")
-    public  ResponseEntity<CashPickupBeneficiary> addBeneficiary(@PathVariable String userId, @Valid @RequestBody CashPickupBeneficiary cashPickupBeneficiary){
+    public  ResponseEntity<CashPickupBeneficiary> addBeneficiary(@PathVariable @UserIdMustExist String userId, @Valid @RequestBody CashPickupBeneficiary cashPickupBeneficiary){
         return new ResponseEntity<>(cashPickupBeneficiaryService.addBeneficiary(userId, cashPickupBeneficiary), HttpStatus.CREATED);
     }
 
@@ -38,8 +38,7 @@ public class CashPickupBeneficiaryController {
     public ResponseEntity<CashPickupBeneficiary> updateBeneficiary(@PathVariable @BeneficiaryIdMustExist String cashpickupId,
                                                                    @PathVariable @UserIdMustExist String userId,
                                                                    @Valid @RequestBody CashPickupBeneficiary newCashPickupBeneficiary){
-        return new ResponseEntity<>(cashPickupBeneficiaryService.updateBeneficiary
-                (cashpickupId, newCashPickupBeneficiary), HttpStatus.OK);
+        return new ResponseEntity<>(cashPickupBeneficiaryService.updateBeneficiary(cashpickupId, newCashPickupBeneficiary), HttpStatus.OK);
     }
 
     @DeleteMapping(value = "beneficiary/{userId}/cashpickup/{cashpickupId}")
