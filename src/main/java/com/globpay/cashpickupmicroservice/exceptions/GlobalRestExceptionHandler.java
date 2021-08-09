@@ -1,5 +1,6 @@
 package com.globpay.cashpickupmicroservice.exceptions;
 
+import com.globpay.cashpickupmicroservice.model.ApiResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,20 +28,20 @@ public class GlobalRestExceptionHandler extends ResponseEntityExceptionHandler {
         for (FieldError fieldError: fieldErrors){
             errors.add(fieldError.getField() + " " + fieldError.getDefaultMessage());
         }
-
-        return handleExceptionInternal(ex, errors, headers, status, request);
+        return new ResponseEntity<>(new ApiResponse("Invalid properties", errors), status);
     }
 
-    @ExceptionHandler({BeneficiaryAlreadyExist.class})
-    public ResponseEntity<String> handleDuplicatedBeneficiary(BeneficiaryAlreadyExist beneficiaryAlreadyExist) {
+    @ExceptionHandler({BeneficiaryAlreadyExistException.class})
+    public ResponseEntity<ApiResponse> handleDuplicatedBeneficiary(BeneficiaryAlreadyExistException beneficiaryAlreadyExist , WebRequest webRequest) {
 
-        String error = beneficiaryAlreadyExist.getMessage();
+        List<String> errors = new ArrayList<>();
+        errors.add(beneficiaryAlreadyExist.getMessage());
 
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ApiResponse("Bad Request", errors), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({ConstraintViolationException.class})
-    public ResponseEntity<List<String>> handleConstraintViolation(ConstraintViolationException ex, WebRequest webRequest) {
+    public ResponseEntity<ApiResponse> handleConstraintViolation(ConstraintViolationException ex, WebRequest webRequest) {
 
         List<String> errors = new ArrayList<>();
 
@@ -49,7 +50,6 @@ public class GlobalRestExceptionHandler extends ResponseEntityExceptionHandler {
         for (ConstraintViolation<?> constraintViolation: constraintViolations) {
             errors.add(constraintViolation.getMessage());
         }
-
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>( new ApiResponse("Validation Failed", errors), HttpStatus.BAD_REQUEST);
     }
 }

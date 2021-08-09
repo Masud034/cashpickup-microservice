@@ -1,26 +1,25 @@
 package com.globpay.cashpickupmicroservice.services;
 
 import com.globpay.cashpickupmicroservice.entities.CashPickupBeneficiary;
-import com.globpay.cashpickupmicroservice.exceptions.BeneficiaryAlreadyExist;
+import com.globpay.cashpickupmicroservice.exceptions.BeneficiaryAlreadyExistException;
 import com.globpay.cashpickupmicroservice.repositories.CashPickupBeneficiaryRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class CashPickupBeneficiaryService {
+public class CashPickupBeneficiaryService{
 
     @Autowired
     private CashPickupBeneficiaryRepository cashPickupBeneficiaryRepository;
 
-    public List<CashPickupBeneficiary> getAllBeneficiaries(String userId) {
+    public List<CashPickupBeneficiary> getAllBeneficiaries(String userId){
         return cashPickupBeneficiaryRepository.findByUserId(userId);
     }
 
-    public CashPickupBeneficiary getBeneficiary(String beneficiaryId) {
+    public CashPickupBeneficiary getBeneficiary(String beneficiaryId){
         return cashPickupBeneficiaryRepository.findById(beneficiaryId).get();
     }
 
@@ -36,19 +35,16 @@ public class CashPickupBeneficiaryService {
                         newCashPickupBeneficiary.isStatus())
                 )
         {
-            throw new BeneficiaryAlreadyExist("You have already added this person");
+            throw new BeneficiaryAlreadyExistException("You have already added this person");
         }
         return cashPickupBeneficiaryRepository.save(newCashPickupBeneficiary);
     }
 
-    public CashPickupBeneficiary updateBeneficiary(String beneficiaryId, CashPickupBeneficiary newBeneficiary){
+    public CashPickupBeneficiary updateBeneficiary(String userId, String beneficiaryId, CashPickupBeneficiary newBeneficiary){
 
         CashPickupBeneficiary oldBeneficiary = cashPickupBeneficiaryRepository.findById(beneficiaryId).get();
-        oldBeneficiary.setUserId(newBeneficiary.getUserId());
-        oldBeneficiary.setName(newBeneficiary.getName());
-        oldBeneficiary.setMobileNumber(newBeneficiary.getMobileNumber());
-        oldBeneficiary.setVerificationId(newBeneficiary.getVerificationId());
-        oldBeneficiary.setStatus(newBeneficiary.isStatus());
+        BeanUtils.copyProperties(newBeneficiary, oldBeneficiary);
+        oldBeneficiary.setUserId(userId);
 
         return cashPickupBeneficiaryRepository.save(oldBeneficiary);
     }
