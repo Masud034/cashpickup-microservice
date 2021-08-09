@@ -14,6 +14,5 @@ public interface CashPickupBeneficiaryRepository extends JpaRepository<CashPicku
     boolean existsByUserIdAndNameAndMobileNumberAndVerificationIdAndStatus(String userId,String name, String mobileNumber,
                                                                            String verificationId,
                                                                            boolean status);
-    //   boolean existsByEntity(CashPickupBeneficiary cashPickupBeneficiary);
     boolean existsByUserId(String userId);
 }
